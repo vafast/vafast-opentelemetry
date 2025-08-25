@@ -1,4 +1,4 @@
-import type { Middleware } from 'tirne'
+import type { Middleware } from 'vafast'
 import {
 	trace,
 	context as otelContext,
@@ -56,7 +56,7 @@ type OpenTeleMetryOptions = NonNullable<
  * For best practice, you should be using preload OpenTelemetry SDK if possible
  * however, this is a simple way to initialize OpenTelemetry SDK
  */
-export interface TirneOpenTelemetryOptions extends OpenTeleMetryOptions {
+export interface VafastOpenTelemetryOptions extends OpenTeleMetryOptions {
 	contextManager?: ContextManager
 }
 
@@ -128,7 +128,7 @@ export type StartActiveSpan = Tracer['startActiveSpan']
 export const contextKeySpan = Symbol.for('OpenTelemetry Context Key SPAN')
 
 export const getTracer = (): ReturnType<TraceAPI['getTracer']> => {
-	const tracer = trace.getTracer('@vafast/tirne')
+	const tracer = trace.getTracer('@vafast/vafast')
 
 	return {
 		...tracer,
@@ -210,11 +210,11 @@ export const setAttributes = (attributes: Attributes) => {
 }
 
 export const opentelemetry = ({
-	serviceName = '@vafast/tirne',
+	serviceName = '@vafast/vafast',
 	instrumentations,
 	contextManager,
 	...options
-}: TirneOpenTelemetryOptions = {}): Middleware => {
+}: VafastOpenTelemetryOptions = {}): Middleware => {
 	let tracer = trace.getTracer(serviceName)
 
 	if (tracer instanceof ProxyTracer) {
@@ -261,46 +261,58 @@ export const opentelemetry = ({
 						try {
 							// Execute the next middleware/handler
 							const response = await next()
-							
+
 							// Set success status
 							rootSpan.setStatus({
 								code: SpanStatusCode.OK
 							})
 
 							// Set basic attributes
-							const attributes: Record<string, string | number> = {
-								'http.request.method': req.method,
-								'url.path': new URL(req.url).pathname,
-								'url.full': req.url,
-								'http.response.status_code': response.status
-							}
+							const attributes: Record<string, string | number> =
+								{
+									'http.request.method': req.method,
+									'url.path': new URL(req.url).pathname,
+									'url.full': req.url,
+									'http.response.status_code': response.status
+								}
 
 							// Add response body size if available
 							if (response.body) {
 								const clonedResponse = response.clone()
 								const text = await clonedResponse.text()
-								attributes['http.response.body.size'] = text.length
+								attributes['http.response.body.size'] =
+									text.length
 							}
 
 							// Add request headers
 							for (const [key, value] of req.headers.entries()) {
 								if (key.toLowerCase() === 'user-agent') continue
-								attributes[`http.request.header.${key.toLowerCase()}`] = value
+								attributes[
+									`http.request.header.${key.toLowerCase()}`
+								] = value
 							}
 
 							// Add response headers
-							for (const [key, value] of response.headers.entries()) {
-								attributes[`http.response.header.${key.toLowerCase()}`] = value
+							for (const [
+								key,
+								value
+							] of response.headers.entries()) {
+								attributes[
+									`http.response.header.${key.toLowerCase()}`
+								] = value
 							}
 
 							rootSpan.setAttributes(attributes)
-							
+
 							return response
 						} catch (error) {
 							// Set error status
 							rootSpan.setStatus({
 								code: SpanStatusCode.ERROR,
-								message: error instanceof Error ? error.message : String(error)
+								message:
+									error instanceof Error
+										? error.message
+										: String(error)
 							})
 
 							if (error instanceof Error) {

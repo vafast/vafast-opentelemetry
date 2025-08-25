@@ -5,20 +5,19 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "bun run --watch example/index.ts",
-		"test": "bun test && npm run test:node",
-		"test:node": "npm install --prefix ./test/node/cjs/ && npm install --prefix ./test/node/esm/ && node ./test/node/cjs/index.js && node ./test/node/esm/index.js",
+		"test": "bun test",
 		"build": "bun build.ts",
 		"release": "npm run build && npm run test && npm publish --access public"
 	},
 	"peerDependencies": {
-		"tirne": ">= 0.1.16"
+		"vafast": ">= 0.1.12"
 	},
 	"devDependencies": {
 		"@types/bun": "1.1.14",
-		"tirne": "0.1.16",
 		"eslint": "9.6.0",
 		"tsup": "^8.1.0",
-		"typescript": "^5.5.3"
+		"typescript": "^5.5.3",
+		"vafast": "^0.1.12"
 	},
 	"main": "./dist/cjs/index.js",
 	"module": "./dist/index.mjs",
@@ -46,5 +45,10 @@
 		"email": "saltyaom@gmail.com"
 	},
 	"homepage": "https://github.com/vafastjs/vafast-opentelemetry",
-	"bugs": "https://github.com/vafastjs/vafast-opentelemetry/issues"
+	"bugs": "https://github.com/vafastjs/vafast-opentelemetry/issues",
+	"dependencies": {
+		"@opentelemetry/api": "^1.9.0",
+		"@opentelemetry/sdk-node": "^0.203.0",
+		"vafast": ">= 0.1.12"
+	}
 }

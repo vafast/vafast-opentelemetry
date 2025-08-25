@@ -1,4 +1,4 @@
-import { Server } from 'tirne'
+import { Server, createRouteHandler } from 'vafast'
 import { opentelemetry } from '../src/index'
 
 // 创建 OpenTelemetry 中间件
@@ -12,20 +12,26 @@ const routes = [
 	{
 		method: 'GET',
 		path: '/',
-		handler: () => new Response('Hello, Tirne with OpenTelemetry!')
+		handler: createRouteHandler(() => {
+			return 'Hello, Vafast with OpenTelemetry!'
+		})
 	},
 	{
 		method: 'GET',
 		path: '/health',
-		handler: () => new Response('OK', { status: 200 })
+		handler: createRouteHandler(() => {
+			return { status: 200, data: 'OK' }
+		})
 	}
 ]
 
-// 创建服务器并应用中间件
+// 创建服务器
 const server = new Server(routes)
-server.use(telemetryMiddleware)
 
-// 启动服务器
-console.log('Server starting...')
-server.listen(3000)
-console.log('Server running on http://localhost:3000')
+// 导出 fetch 函数，应用中间件
+export default {
+	fetch: (req: Request) => {
+		// 应用 OpenTelemetry 中间件
+		return telemetryMiddleware(req, () => server.fetch(req))
+	}
+}
