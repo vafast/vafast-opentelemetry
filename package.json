@@ -13,7 +13,7 @@
 		"vafast": ">= 0.1.12"
 	},
 	"devDependencies": {
-		"@types/bun": "1.1.14",
+		"@types/bun": "1.2.21",
 		"eslint": "9.6.0",
 		"tsup": "^8.1.0",
 		"typescript": "^5.5.3",
