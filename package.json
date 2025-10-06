@@ -48,7 +48,7 @@
 	"bugs": "https://github.com/vafastjs/vafast-opentelemetry/issues",
 	"dependencies": {
 		"@opentelemetry/api": "^1.9.0",
-		"@opentelemetry/sdk-node": "^0.203.0",
+		"@opentelemetry/sdk-node": "^0.206.0",
 		"vafast": ">= 0.1.12"
 	}
 }
