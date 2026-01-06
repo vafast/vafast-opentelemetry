@@ -1,5 +1,6 @@
-import { Server, createRouteHandler } from 'vafast'
+import { Server, createHandler, json } from 'vafast'
 import { opentelemetry } from '../src/index'
+import { describe, expect, it } from 'vitest'
 
 describe('Vafast OpenTelemetry Plugin', () => {
 	it('should create OpenTelemetry middleware', () => {
@@ -22,7 +23,7 @@ describe('Vafast OpenTelemetry Plugin', () => {
 			{
 				method: 'GET',
 				path: '/',
-				handler: createRouteHandler(() => {
+				handler: createHandler(() => {
 					return 'Hello, OpenTelemetry!'
 				})
 			}
@@ -40,32 +41,32 @@ describe('Vafast OpenTelemetry Plugin', () => {
 		expect(res.status).toBe(200)
 	})
 
-	  it('should handle errors in OpenTelemetry middleware', async () => {
-    const telemetryMiddleware = opentelemetry({
-      serviceName: 'test-app',
-      instrumentations: []
-    })
-    
-    const app = new Server([
-      {
-        method: 'GET',
-        path: '/error',
-        handler: createRouteHandler(() => {
-          throw new Error('Test error')
-        })
-      }
-    ])
+	it('should handle errors in OpenTelemetry middleware', async () => {
+		const telemetryMiddleware = opentelemetry({
+			serviceName: 'test-app',
+			instrumentations: []
+		})
 
-    // 应用中间件
-    const wrappedFetch = (req: Request) => {
-      return telemetryMiddleware(req, () => app.fetch(req))
-    }
+		const app = new Server([
+			{
+				method: 'GET',
+				path: '/error',
+				handler: createHandler(() => {
+					throw new Error('Test error')
+				})
+			}
+		])
 
-    // 测试错误处理 - OpenTelemetry 中间件应该能够处理错误
-    const result = await wrappedFetch(new Request('http://localhost/error'))
-    // 如果中间件正确处理了错误，我们应该得到一个响应而不是抛出异常
-    expect(result).toBeDefined()
-  })
+		// 应用中间件
+		const wrappedFetch = (req: Request) => {
+			return telemetryMiddleware(req, () => app.fetch(req))
+		}
+
+		// 测试错误处理 - OpenTelemetry 中间件应该能够处理错误
+		const result = await wrappedFetch(new Request('http://localhost/error'))
+		// 如果中间件正确处理了错误，我们应该得到一个响应而不是抛出异常
+		expect(result).toBeDefined()
+	})
 
 	it('should work with custom service name', () => {
 		const telemetryMiddleware = opentelemetry({
@@ -95,15 +96,15 @@ describe('Vafast OpenTelemetry Plugin', () => {
 			{
 				method: 'POST',
 				path: '/',
-				handler: createRouteHandler(() => {
-					return { message: 'POST request' }
+				handler: createHandler(() => {
+					return json({ message: 'POST request' })
 				})
 			},
 			{
 				method: 'PUT',
 				path: '/',
-				handler: createRouteHandler(() => {
-					return { message: 'PUT request' }
+				handler: createHandler(() => {
+					return json({ message: 'PUT request' })
 				})
 			}
 		])
