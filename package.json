@@ -43,15 +43,15 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/vafastjs/vafast-opentelemetry"
+		"url": "https://github.com/vafast/vafast-opentelemetry"
 	},
 	"author": {
 		"name": "saltyAom",
 		"url": "https://github.com/SaltyAom",
 		"email": "saltyaom@gmail.com"
 	},
-	"homepage": "https://github.com/vafastjs/vafast-opentelemetry",
-	"bugs": "https://github.com/vafastjs/vafast-opentelemetry/issues",
+	"homepage": "https://github.com/vafast/vafast-opentelemetry",
+	"bugs": "https://github.com/vafast/vafast-opentelemetry/issues",
 	"dependencies": {
 		"@opentelemetry/api": "^1.9.0",
 		"@opentelemetry/sdk-node": "^0.203.0",
