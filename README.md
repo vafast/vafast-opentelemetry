@@ -5,7 +5,7 @@ Plugin for [Vafast](https://github.com/vafastjs/vafast) for OpenTelemetry integr
 ## Installation
 
 ```bash
-bun add @vafast/opentelemetry
+npm install @vafast/opentelemetry
 # or
 npm install @vafast/opentelemetry
 ```
