@@ -1,4 +1,4 @@
-import { Server, createHandler, json } from 'vafast'
+import { Server, defineRoute, defineRoutes, json } from 'vafast'
 import { opentelemetry } from '../src/index'
 import { describe, expect, it } from 'vitest'
 
@@ -19,15 +19,15 @@ describe('Vafast OpenTelemetry Plugin', () => {
 			instrumentations: []
 		})
 
-		const app = new Server([
-			{
-				method: 'GET',
-				path: '/',
-				handler: createHandler(() => {
-					return 'Hello, OpenTelemetry!'
+		const app = new Server(
+			defineRoutes([
+				defineRoute({
+					method: 'GET',
+					path: '/',
+					handler: () => 'Hello, OpenTelemetry!'
 				})
-			}
-		])
+			])
+		)
 
 		// 应用中间件
 		const wrappedFetch = (req: Request) => {
@@ -47,15 +47,17 @@ describe('Vafast OpenTelemetry Plugin', () => {
 			instrumentations: []
 		})
 
-		const app = new Server([
-			{
-				method: 'GET',
-				path: '/error',
-				handler: createHandler(() => {
-					throw new Error('Test error')
+		const app = new Server(
+			defineRoutes([
+				defineRoute({
+					method: 'GET',
+					path: '/error',
+					handler: () => {
+						throw new Error('Test error')
+					}
 				})
-			}
-		])
+			])
+		)
 
 		// 应用中间件
 		const wrappedFetch = (req: Request) => {
@@ -92,22 +94,20 @@ describe('Vafast OpenTelemetry Plugin', () => {
 			instrumentations: []
 		})
 
-		const app = new Server([
-			{
-				method: 'POST',
-				path: '/',
-				handler: createHandler(() => {
-					return json({ message: 'POST request' })
+		const app = new Server(
+			defineRoutes([
+				defineRoute({
+					method: 'POST',
+					path: '/',
+					handler: () => json({ message: 'POST request' })
+				}),
+				defineRoute({
+					method: 'PUT',
+					path: '/',
+					handler: () => json({ message: 'PUT request' })
 				})
-			},
-			{
-				method: 'PUT',
-				path: '/',
-				handler: createHandler(() => {
-					return json({ message: 'PUT request' })
-				})
-			}
-		])
+			])
+		)
 
 		// 应用中间件
 		const wrappedFetch = (req: Request) => {

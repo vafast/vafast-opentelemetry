@@ -1,4 +1,4 @@
-import type { Middleware } from 'vafast'
+import { defineMiddleware } from 'vafast'
 import {
 	trace,
 	context as otelContext,
@@ -214,7 +214,7 @@ export const opentelemetry = ({
 	instrumentations,
 	contextManager,
 	...options
-}: VafastOpenTelemetryOptions = {}): Middleware => {
+}: VafastOpenTelemetryOptions = {}) => {
 	let tracer = trace.getTracer(serviceName)
 
 	if (tracer instanceof ProxyTracer) {
@@ -238,7 +238,7 @@ export const opentelemetry = ({
 			// Noop ContextManager
 		}
 
-	return async (req: Request, next: () => Promise<Response>) => {
+	return defineMiddleware<object>(async (req, next) => {
 		let headers
 		if (headerHasToJSON) {
 			// @ts-ignore bun only
@@ -332,5 +332,5 @@ export const opentelemetry = ({
 				return response
 			}
 		)
-	}
+	})
 }
