@@ -9,7 +9,7 @@ import {
 	type SpanOptions,
 	type Span,
 	type Attributes,
-	TraceAPI,
+	type TraceAPI,
 	ProxyTracer,
 	SpanKind
 } from '@opentelemetry/api'

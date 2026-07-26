@@ -1,6 +1,6 @@
 {
   "name": "@vafast/opentelemetry",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Plugin for Vafast for OpenTelemetry integration",
   "type": "module",
   "license": "MIT",
